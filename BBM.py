@@ -25,13 +25,16 @@ from tkinter import font
 import sqlite3 as sq
 from datetime import datetime
 from datetime import timedelta
+from webbrowser import open_new_tab
+
+__version__ = '0.1'
+__author__ = 'Denis Sazonov'
 
 root = Tk()
-version = '0.1'
-root.title('BBM Decoder {0}'.format(version))
+root.title('BBM Decoder {0} \u00A9 2014'.format(__version__))
 
 def aboutmsg():
-	messagebox.showinfo('BBM Decoder version: {0}'.format(version), 'Decodes Android and Apple BBM \'master.db\' files into a single HTML report.\nhttp://android.saz.lt\nCopyright 2012-14')
+	messagebox.showinfo('BBM Decoder version: {0} \u00A9 2014'.format(__version__), 'Decodes Android and Apple BBM \'master.db\' files into a single HTML report.\nhttp://android.saz.lt\nCopyright 2012-14')
 
 Input = StringVar()
 Output = StringVar()
@@ -108,8 +111,12 @@ def decode_masterdb():
                 fileh.write('</table>\n<p align="center"><i># <a href="http://android.saz.lt" target="_blank">http://android.saz.lt</a> #</i></p>\n</body></html>')
                 fileh.close()
                 Result.set('Decoded {0} messages'.format(len(bbm_data)))
+                try:
+                        open_new_tab(Output.get())
+                except:
+                        pass
         except:
-                Result.set('Error! No Input or Output selected!')
+                Result.set('ERROR!')
 
 menubar = Menu(root)
 root['menu'] = menubar
@@ -121,8 +128,7 @@ mainframe.grid(row=0, column=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-Font1 = font.Font(weight='bold', size=10)
-Font2 = font.Font(weight='bold', size=8)
+Font1 = font.Font(weight='bold', size=9)
 ttk.Label(mainframe, font=Font1, text='\
 1. For \'Input\': Choose the \'master.db\' file\n\
 2. For \'Output\': Choose the reporting file\n\
@@ -135,6 +141,6 @@ ttk.Button(mainframe, text='Output', command=out_file).grid(row=2, column=0, sti
 ttk.Label(mainframe, textvariable=Output).grid(row=2, column=1, sticky=W)
 
 ttk.Button(mainframe, text='DECODE!', command=decode_masterdb).grid(row=3, column=0, sticky=W)
-ttk.Label(mainframe, font=Font2, textvariable=Result).grid(row=3, column=1, sticky=(W,E))
+ttk.Label(mainframe, font=Font1, textvariable=Result).grid(row=3, column=1, sticky=(W,E))
 
 root.mainloop()
